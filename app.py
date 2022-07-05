@@ -92,6 +92,12 @@ courses_list = [{
 
 @app.route('/course-form', methods=('GET', 'POST'))
 def course_form():
-    """A route for showing and new WTF form"""
+    """A route for creating course with WTF form"""
     form = CourseForm()
     return render_template('course-form.html', form=form)
+
+
+@app.route('/courses/')
+def courses():
+    """A route for showing courses"""
+    return render_template('courses.html', courses_list=courses_list)
