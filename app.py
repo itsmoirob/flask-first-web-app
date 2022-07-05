@@ -1,6 +1,7 @@
 import datetime
 from markupsafe import escape
 from flask import Flask, abort, render_template, request, url_for, flash, redirect
+from forms import CourseForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5272f00818210386d6e839c91c4bff24bb513081f86166da'
@@ -78,3 +79,19 @@ def create():
             return redirect(url_for('comments'))
 
     return render_template('create.html')
+
+
+courses_list = [{
+    'title': 'Python 101',
+    'description': 'Learn Python basics',
+    'price': 34,
+    'available': True,
+    'level': 'Beginner'
+}]
+
+
+@app.route('/course-form', methods=('GET', 'POST'))
+def course_form():
+    """A route for showing and new WTF form"""
+    form = CourseForm()
+    return render_template('course-form.html', form=form)
