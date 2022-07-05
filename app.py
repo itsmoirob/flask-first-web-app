@@ -94,6 +94,15 @@ courses_list = [{
 def course_form():
     """A route for creating course with WTF form"""
     form = CourseForm()
+    if form.validate_on_submit():
+        courses_list.append({'title': form.title.data,
+                             'description': form.description.data,
+                             'price': form.price.data,
+                             'available': form.available.data,
+                             'level': form.level.data
+                             })
+        return redirect(url_for('courses'))
+
     return render_template('course-form.html', form=form)
 
 
