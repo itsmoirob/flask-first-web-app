@@ -58,18 +58,6 @@ def template_about():
 
 @app.route('/comments/')
 def comments():
-    """A route passing data to a template"""
-    comments_list = ['This is the first comment.',
-                     'This is the second comment.',
-                     'This is the third comment.',
-                     'This is the fourth comment.'
-                     ]
-
-    return render_template('comments.html', comments=comments_list)
-
-
-@app.route('/web-form/')
-def web_form():
     """A route with basic tempalte"""
     return render_template('web-form.html', messages=messages)
 
@@ -87,6 +75,6 @@ def create():
             flash('Content is require!')
         else:
             messages.append({'title': title, 'content': content})
-            return redirect(url_for('web_form'))
+            return redirect(url_for('comments'))
 
     return render_template('create.html')
