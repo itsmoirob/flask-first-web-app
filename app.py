@@ -4,6 +4,9 @@ from flask import Flask, abort, render_template
 
 app = Flask(__name__)
 
+messages = [{'title': 'Message one', 'content': 'Message one content'},
+            {'title': 'Message one', 'content': 'Message two content'}]
+
 
 @app.route('/')
 @app.route('/index')
@@ -54,3 +57,13 @@ def comments():
                 ]
 
     return render_template('comments.html', comments=comments)
+
+
+@app.route('/web-form/')
+def web_form():
+    return render_template('web-form.html', messages=messages)
+
+
+@app.route('/create/', methods=('GET', 'POST'))
+def create():
+    return render_template('create.html')
