@@ -102,19 +102,24 @@ def sql_comments():
     return render_template('sql-comments.html', posts=posts)
 
 
-# @app.route('/create/', methods=('GET', 'POST'))
-# def create():
-#     """A route for showing and using webforms"""
-#     if request.method == 'POST':
-#         title = request.form['title']
-#         content = request.form['content']
+@app.route('/sql-create/', methods=('GET', 'POST'))
+def sql_create():
+    """A route for showing and using SQL conn"""
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
 
-#         if not title:
-#             flash('Title is required!')
-#         elif not content:
-#             flash('Content is require!')
-#         else:
-#             messages.append({'title': title, 'content': content})
-#             return redirect(url_for('comments'))
+        if not title:
+            flash('Title is required!')
+        elif not content:
+            flash('Content is require!')
+        else:
+            conn = get_db_connection()
+            conn.execute('INSERT INTO posts (title, content) VALUES (?, ?)',
+                         (title, content))
+            conn.commit()
+            conn.close()
 
-#     return render_template('create.html')
+            return redirect(url_for('sql_comments'))
+
+    return render_template('sql-create.html')

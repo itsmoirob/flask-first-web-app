@@ -10,6 +10,13 @@
             margin: 5px;
             background-color: #f3f3f3
         }
+        
+        .post {
+            padding: 10px;
+            margin: 5px;
+            background-color: #f3f3f3
+        }
+
         nav a {
             color: #d64161;
             font-size: 3em;
@@ -30,10 +37,10 @@
   <nav>
     <a href="{{ url_for('template') }}">FlaskApp</a>
     <a href="{{ url_for('template_about') }}">About</a>
-    <a href="{{ url_for('sql_comments') }}">SQL comments</a>
-    <a href="{{ url_for('create') }}">Add comment</a>
-    <a href="{{ url_for('course_form') }}">Add course</a>
-    <a href="{{ url_for('courses') }}">View courses</a>
+    <a href="{{ url_for('sql_comments') }}">Comments</a>
+    <a href="{{ url_for('sql_create') }}">+Comment</a>
+    <a href="{{ url_for('courses') }}">Courses</a>
+    <a href="{{ url_for('course_form') }}">+Course</a>
   </nav>
   <hr>
   <div class="content">
