@@ -1,4 +1,5 @@
 import datetime
+import sqlite3
 from markupsafe import escape
 from flask import Flask, abort, render_template, request, url_for, flash, redirect
 from forms import CourseForm
@@ -6,8 +7,12 @@ from forms import CourseForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5272f00818210386d6e839c91c4bff24bb513081f86166da'
 
-messages = [{'title': 'Message one', 'content': 'Message one content'},
-            {'title': 'Message one', 'content': 'Message two content'}]
+
+def get_db_connection():
+    """Connection to the database"""
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 @app.route('/')
@@ -57,30 +62,6 @@ def template_about():
     return render_template('about.html')
 
 
-@app.route('/comments/')
-def comments():
-    """A route with basic tempalte"""
-    return render_template('web-form.html', messages=messages)
-
-
-@app.route('/create/', methods=('GET', 'POST'))
-def create():
-    """A route for showing and using webforms"""
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-
-        if not title:
-            flash('Title is required!')
-        elif not content:
-            flash('Content is require!')
-        else:
-            messages.append({'title': title, 'content': content})
-            return redirect(url_for('comments'))
-
-    return render_template('create.html')
-
-
 courses_list = [{
     'title': 'Python 101',
     'description': 'Learn Python basics',
@@ -110,3 +91,30 @@ def course_form():
 def courses():
     """A route for showing courses"""
     return render_template('courses.html', courses_list=courses_list)
+
+
+@app.route('/sql-comments/')
+def sql_comments():
+    """A route with SQLite conn"""
+    conn = get_db_connection()
+    posts = conn.execute('SELECT * FROM posts').fetchall()
+    conn.close()
+    return render_template('sql-comments.html', posts=posts)
+
+
+# @app.route('/create/', methods=('GET', 'POST'))
+# def create():
+#     """A route for showing and using webforms"""
+#     if request.method == 'POST':
+#         title = request.form['title']
+#         content = request.form['content']
+
+#         if not title:
+#             flash('Title is required!')
+#         elif not content:
+#             flash('Content is require!')
+#         else:
+#             messages.append({'title': title, 'content': content})
+#             return redirect(url_for('comments'))
+
+#     return render_template('create.html')
