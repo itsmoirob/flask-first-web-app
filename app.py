@@ -161,3 +161,18 @@ def sql_edit(id):
             return redirect(url_for('sql_comments'))
 
     return render_template('sql-edit.html', post=post)
+
+
+@app.route('/comment/<int:id>/delete/', methods=('POST',))
+def sql_delete(id):
+    """A route to delete one post"""
+    post = get_post(id)
+
+    conn = get_db_connection()
+    conn.execute('DELETE FROM posts WHERE id = ?', (id,))
+    conn.commit()
+    conn.close()
+
+    flash(f"{post['title']} was successfully deleted!")
+
+    return redirect(url_for('sql_comments'))
