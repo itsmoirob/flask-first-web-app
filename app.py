@@ -15,6 +15,18 @@ def get_db_connection():
     return conn
 
 
+def get_post(post_id):
+    """Return one post if theres ID"""
+    conn = get_db_connection()
+    post = conn.execute('SELECT * FROM posts WHERE id = ?',
+                        (post_id,)).fetchone()
+    conn.close()
+
+    if post is None:
+        abort(404)
+    return post
+
+
 @app.route('/')
 @app.route('/index')
 def hello():
@@ -123,3 +135,29 @@ def sql_create():
             return redirect(url_for('sql_comments'))
 
     return render_template('sql-create.html')
+
+
+@app.route('/comment/<int:id>/edit/', methods=('GET', 'POST'))
+def sql_edit(id):
+    """A route to return and edit one post"""
+    post = get_post(id)
+
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+
+        if not title:
+            flash('Title is required!')
+        elif not content:
+            flash('Content is require!')
+        else:
+            conn = get_db_connection()
+            conn.execute('UPDATE posts SET title = ?, content = ?'
+                         ' WHERE id = ?',
+                         (title, content, id))
+            conn.commit()
+            conn.close()
+
+            return redirect(url_for('sql_comments'))
+
+    return render_template('sql-edit.html', post=post)
